@@ -11,11 +11,9 @@ class Task(db.Model):
         return '<Task %r>' % self.id
 
     def to_dict(self):
-        images = [image.to_dict() for image in self.images]  # Convert images to dictionaries
         return {
-            "id": self.id,
-            "name": self.name,
-            "description": self.description,
-            "drone_id": self.drone_id,
-            "images": images,  # Include list of image dictionaries
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'drone_id': self.drone_id
         }

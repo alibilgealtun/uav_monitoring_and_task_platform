@@ -6,6 +6,15 @@ import io
 from flask import current_app
 
 def create_and_upload_images(task_id):
+    """
+    Generates random images, saves them locally, uploads them to a MinIO bucket, and returns their URLs.
+
+    Args:
+        task_id (int): The ID of the task for which images are being created.
+
+    Returns:
+        list: A list of URLs pointing to the uploaded images.
+    """
     minio_client = current_app.minio_client
     bucket_name = "task-images"
 

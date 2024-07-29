@@ -1,10 +1,18 @@
 from flask_sqlalchemy import SQLAlchemy
 from minio import Minio
 
-
 db = SQLAlchemy()
 
 def create_minio_client(app):
+    """
+    Creates and returns a Minio client using the app's configuration.
+
+    Args:
+        app (Flask): The Flask application instance.
+
+    Returns:
+        Minio: The configured Minio client instance.
+    """
     endpoint = app.config.get('MINIO_ENDPOINT')
     access_key = app.config.get('MINIO_ACCESS_KEY')
     secret_key = app.config.get('MINIO_SECRET_KEY')

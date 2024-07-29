@@ -4,9 +4,19 @@ from .config import Config
 from flask_cors import CORS
 
 def create_app(config_class=Config):
+    """
+    Application factory function for creating and configuring the Flask application.
+
+    Args:
+        config_class (class): The configuration class to use for the application.
+
+    Returns:
+        Flask: The configured Flask application instance.
+    """
     app = Flask(__name__)
     app.config.from_object(config_class)
 
+    # Enable Cross-Origin Resource Sharing (CORS)
     CORS(app)
 
     # Initialize extensions

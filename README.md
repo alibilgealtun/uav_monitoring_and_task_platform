@@ -4,28 +4,6 @@
 
 This project is a web-based UAV monitoring and task execution platform designed to manage drone tasks and retrieve images captured during task execution. The platform includes functionalities for creating tasks, assigning tasks to drones, executing tasks, and retrieving associated images.
 
-## Features
-
-### Backend (Python Flask)
-- **Flask Application**: Serves as the backend for the UAV monitoring platform.
-- **RESTful API**:
-  - `GET /api/drones`: Retrieve a list of drones with basic information.
-  - `POST /api/tasks`: Create a new task with details such as task name, description, and assigned drone(s).
-  - `GET /api/tasks/:id`: Retrieve details of a specific task, including associated drone(s).
-  - `POST /api/tasks/:id/execute`: Execute a task, triggering image capture by the assigned drone(s). Five random noisy images are generated and stored during this execution.
-  - `GET /api/tasks/:id/images`: Retrieve images captured during the execution of a task.
-
-- **Database Schema**:
-  - **Drone**: Stores information about drones.
-  - **Task**: Manages tasks, associated with one or more drones.
-  - **Image**: Stores images captured during task execution.
-  - **Relationships**: One-to-many relationship between Drone and Task tables.
-
-### Frontend (Vue.js)
-- **Task Management**: Create tasks, assign drones to tasks, and execute tasks.
-- **Task Details**: View task details, including associated drones and captured images.
-- **Image Retrieval**: Retrieve and display images captured during task execution.
-
 ## Setup Instructions
 
 ### Prerequisites
@@ -66,9 +44,9 @@ This project is a web-based UAV monitoring and task execution platform designed 
 
 
 ### Usage
-# Create Drones: Use the frontend to add drones.
-# Create Tasks: Define tasks and assign drones via the frontend.
-# Execute Tasks: Trigger task execution, which captures images.
-# View Task Details: Retrieve and view images captured during task execution.
+**Create Drones: Use the frontend to add drones.**
+**Create Tasks: Define tasks and assign drones via the frontend.**
+**Execute Tasks: Trigger task execution, which captures images.**
+**View Task Details: Retrieve and view images captured during task execution.**
 
 

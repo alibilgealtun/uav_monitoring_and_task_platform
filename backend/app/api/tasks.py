@@ -43,18 +43,23 @@ def get_tasks():
 @bp.route('/tasks/<int:task_id>/assign', methods=['PUT'])
 def assign_task(task_id):
     data = request.get_json()
-    drone_id = data.get('drone_id')
+    drone_ids = data.get('drone_ids', [])
 
-    if not drone_id:
-        return jsonify({'error': 'Drone ID is required'}), 400
+    if not drone_ids:
+        return jsonify({'error': 'Drone IDs are required'}), 400
 
     task = Task.query.get_or_404(task_id)
-    drone = Drone.query.get_or_404(drone_id)
 
-    task.drone_id = drone_id
+    # Clear current drone assignments
+    task.drones.clear()
+
+    for drone_id in drone_ids:
+        drone = Drone.query.get_or_404(drone_id)
+        task.drones.append(drone)
+
     db.session.commit()
 
-    return jsonify({'message': f'Task {task_id} assigned to drone {drone_id}'}), 200
+    return jsonify({'message': f'Drones assigned to task {task_id}'}), 200
 
 
 @bp.route('/tasks', methods=['POST'])
@@ -62,19 +67,20 @@ def create_task():
     data = request.get_json()
     name = data.get('name')
     description = data.get('description')
-    drone_id = data.get('drone_id')  # Assuming each task is assigned to one drone
+    drone_ids = data.get('drone_ids')  # Assuming each task is assigned to one drone
 
     if not name:
         return jsonify({'error': 'Task name is required'}), 400
 
-    # Optional: Validate drone_id if provided
-    if drone_id:
+    drones = []
+    for drone_id in drone_ids:
         drone = Drone.query.get(drone_id)
         if not drone:
-            return jsonify({'error': 'Invalid drone ID'}), 400
+            return jsonify({'error': f'Invalid drone ID: {drone_id}'}), 400
+        drones.append(drone)
 
     # Create and add new task to the database
-    new_task = Task(name=name, description=description, drone_id=drone_id)
+    new_task = Task(name=name, description=description, drones=drones)
     db.session.add(new_task)
     db.session.commit()
 

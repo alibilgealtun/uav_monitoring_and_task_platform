@@ -1,10 +1,10 @@
-/* General Styles */
 body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
   color: #333;
   margin: 0;
   padding: 0;
+  text-align:center;
 }
 
 #app {
@@ -16,12 +16,10 @@ body {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Headings */
 h1, h2, h3, h4 {
   color: #333;
 }
 
-/* Forms */
 form {
   margin-bottom: 20px;
 }
@@ -41,7 +39,6 @@ input[type="text"], textarea, select {
   box-sizing: border-box;
 }
 
-/* Buttons */
 button {
   background-color: #007bff;
   color: #fff;
@@ -84,15 +81,16 @@ li {
   display: block;
 }
 
-/* Additional styles */
 div > div {
   margin-bottom: 20px;
+  margin-top:20px;
 }
 
-input[type="number"] {
-  width: calc(100% - 130px);
+input[type="number" ], input[type="text"] {
+  width: calc(250px);
   display: inline-block;
 }
+
 
 button {
   display: inline-block;
@@ -101,4 +99,17 @@ button {
 
 div > button {
   margin-top: 10px;
+}
+
+#assignDroneDiv{
+  display:flex;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+}
+.selecting{
+  margin-right:30px;
+}
+.selecting:last-child{
+  margin-right:15px;
 }

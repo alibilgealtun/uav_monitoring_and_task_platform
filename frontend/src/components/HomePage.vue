@@ -1,9 +1,102 @@
 <template>
   <div id="app">
     <h1>UAV Monitoring and Task Execution Platform</h1>
+
+
+    <div>
+      <h2>Adding drones</h2>
+        <input type="text" v-model="droneName" placeholder="Enter drone name" />
+        <button @click="addDrone">Add Drone</button>
+      </div>
+
+    <!-- Drone Operations Section -->
+    <div>
+      <h2>Get Drones</h2>
+
+      <button @click="toggleDrones">{{ showDrones ? 'Hide Drones' : 'Get Drones' }}</button>
+      <div v-if="showDrones && drones.length">
+        <h3>Available Drones:</h3>
+        <ul>
+          <li v-for="(drone, index) in drones" :key="drone.id">
+            {{ drone.name }}
+            <button @click="toggleTasks(index)">
+              {{ showTasks[index] ? 'Hide Tasks' : 'Show Tasks' }}
+            </button>
+            <div v-if="showTasks[index]">
+              <h4>Tasks for {{ drone.name }}</h4>
+              <ul>
+                <li v-for="task in drone.tasks" :key="task.id">
+                  Task: {{ task.name }}
+                  <button @click="toggleTaskDetails(task)">Details</button>
+                </li>
+              </ul>
+            </div>
+          </li>
+        </ul>
+      </div>
+
+    </div>
+
+        <!-- Task Operations Section -->
+    <div>
+      <h2>Task Operations</h2>
+      <button @click="toggleTaskList">List Tasks</button>
+      <div v-if="showTaskList" class="task-list-frame">
+        <h3>All Tasks</h3>
+        <ul>
+          <li v-for="task in allTasks" :key="task.id">
+           (Task ID:  {{ task.id }})   <strong>{{ task.name }}</strong>: {{ task.description }}
+            <button @click="toggleTaskDetails(task)">Details</button>
+          </li>
+        </ul>
+      </div>
+     <div v-if="showTaskDetails" class="task-details-frame">
+      <h3>Task Details</h3>
+      <p><strong>Task ID:</strong> {{ selectedTask.id}}</p>
+      <p><strong>Name:</strong> {{ selectedTask.name }}</p>
+      <p><strong>Description:</strong> {{ selectedTask.description }}</p>
+      <p><strong>Drone ID:</strong> {{ selectedTask.drone_id }}</p>
+
+      <p><strong>Images:</strong></p>
+      <ul class="image-gallery" v-if="selectedTask.images.length">
+        <li v-for="image in selectedTask.images" :key="image.id">
+          <a :href="image.image_url" target="_blank">{{ image.image_url }}</a>
+        </li>
+      </ul>
+
+      <button @click="toggleTaskDetails(null)">Close Details</button>
+    </div>
+
+
+      <h2> Executing Specific Task </h2>
+      <div>
+        <input type="number" v-model="taskId" placeholder="Enter task ID" />
+        <button @click="executeTask(taskId)">Execute Task</button>
+      </div>
+      <div v-if="taskMessage">
+        <h3>Task Execution Result:</h3>
+        <p>{{ taskMessage }}</p>
+        <div v-if="newlyCapturedImages.length">
+          <h3>Generated Images:</h3>
+<ul class="image-gallery">
+  <li v-for="image in newlyCapturedImages" :key="image.id">
+    <a :href="image.image_url" target="_blank">{{ image.image_url }}</a>
+  </li>
+</ul>
+
+        </div>
+      </div>
+
+
+    </div>
+
+    <!-- Create New Task Section -->
     <div>
       <h2>Create New Task</h2>
-      <form @submit.prevent="createTask">
+      <button @click="toggleTaskForm">
+        {{ showTaskForm ? 'Hide Task Form' : 'Create New Task' }}
+      </button>
+      <form v-if="showTaskForm" @submit.prevent="createTask">
         <div>
           <label for="taskName">Task Name:</label>
           <input type="text" v-model="newTask.name" id="taskName" required />
@@ -23,77 +116,19 @@
         <button type="submit">Create Task</button>
       </form>
     </div>
-    <div>
-      <h2>Drone Operations</h2>
-      <button @click="toggleDrones">{{ showDrones ? 'Hide Drones' : 'Get Drones' }}</button>
-      <div v-if="showDrones && drones.length">
-        <h3>Available Drones:</h3>
-        <ul>
-          <li v-for="(drone, index) in drones" :key="drone.id">
-            {{ drone.name }}
-            <button @click="toggleTasks(index)">
-              {{ showTasks[index] ? 'Hide Tasks' : 'Show Tasks' }}
-            </button>
-            <div v-if="showTasks[index]">
-              <h4>Tasks for {{ drone.name }}</h4>
-              <ul>
-                <li v-for="task in drone.tasks" :key="task.id">
-                  Task: {{ task.name }}
-                  <button @click="viewTaskDetails(task.id)">Details</button>
-                </li>
-              </ul>
-            </div>
-          </li>
-        </ul>
-      </div>
-      <div>
-        <input type="text" v-model="droneName" placeholder="Enter drone name" />
-        <button @click="addDrone">Add Drone</button>
-      </div>
-    </div>
 
-    <div>
-      <h2>Task Operations</h2>
-      <div>
-        <input type="number" v-model="taskId" placeholder="Enter task ID" />
-        <button @click="executeTask(taskId)">Execute Task</button>
-      </div>
-      <div v-if="taskMessage">
-        <h3>Task Execution Result:</h3>
-        <p>{{ taskMessage }}</p>
-        <div v-if="newlyCapturedImages.length">
-          <h3>Generated Images:</h3>
-          <ul class="image-gallery">
-            <li v-for="image in newlyCapturedImages" :key="image.id">
-              <img :src="image.image_url" alt="Task Image" />
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div>
-        <input type="number" v-model="taskIdForImages" placeholder="Enter task ID for images" />
-        <button @click="getTaskImages">Get Task Images</button>
-      </div>
-      <div v-if="taskImages.length">
-        <h3>Task Images:</h3>
-        <ul>
-          <li v-for="image in taskImages" :key="image.id">
-            <a :href="image.image_url" target="_blank">View Image</a>
-          </li>
-        </ul>
-      </div>
-    </div>
+    <!-- Assign Drone to Task Section -->
+    <h2>Assign Drone to Task</h2>
 
-    <div>
-      <h2>Assign Drone to Task</h2>
-      <div>
+    <div id="assignDroneDiv">
+      <div class="selecting">
         <label for="selectDrone">Select Drone:</label>
         <select v-model="selectedDroneId" id="selectDrone" @focus="fetchDronesOnFocus">
           <option disabled value="">Select a drone</option>
           <option v-for="drone in drones" :key="drone.id" :value="drone.id">{{ drone.name }}</option>
         </select>
       </div>
-      <div>
+      <div class="selecting">
         <label for="selectTask">Select Task:</label>
         <select v-model="selectedTaskId" id="selectTask" @focus="fetchTasksOnFocus">
           <option disabled value="">Select a task</option>
@@ -107,20 +142,8 @@
 
 <script>
 import axios from 'axios';
-import { useRouter } from 'vue-router';
 
 export default {
-   setup() {
-    const router = useRouter();
-
-    const viewTaskDetails = (taskId) => {
-      router.push({ name: 'TaskDetails', params: { id: taskId } });
-    };
-
-    return {
-      viewTaskDetails,
-    };
-  },
   data() {
     return {
       drones: [],
@@ -133,13 +156,17 @@ export default {
       taskId: null,
       taskMessage: "",
       taskIdForImages: null,
-      taskImages: [], // Images retrieved by "Get Task Images"
-      newlyCapturedImages: [], // New images captured by "Execute Task"
+      taskImages: [],
+      newlyCapturedImages: [],
       showDrones: false,
-      showTasks: [], // Array to track the visibility of tasks for each drone
-      allTasks: [], // All available tasks
+      showTasks: [],
+      allTasks: [],
       selectedDroneId: "",
-      selectedTaskId: ""
+      selectedTaskId: "",
+      showTaskForm: false,
+      showTaskList: false,
+      selectedTask: null,
+      showTaskDetails: false,
     };
   },
   methods: {
@@ -158,6 +185,9 @@ export default {
         this.getDrones();
       }
       this.showDrones = !this.showDrones;
+    },
+    toggleTaskForm() {
+      this.showTaskForm = !this.showTaskForm;
     },
     getDrones() {
       axios.get('http://127.0.0.1:5000/api/drones')
@@ -187,21 +217,26 @@ export default {
     toggleTasks(index) {
       this.$set(this.showTasks, index, !this.showTasks[index]);
     },
-    executeTask(id) {
-      if (!id) {
-        alert("Please enter a valid task ID.");
-        return;
-      }
-      axios.post(`http://127.0.0.1:5000/api/tasks/${id}/execute`)
-        .then(response => {
-          this.taskMessage = response.data.message;
-          this.newlyCapturedImages = response.data.images;  // Update newly captured images
-          this.taskImages = [];
-        })
-        .catch(err => {
-          console.error(err);
-        });
-    },
+   executeTask(id) {
+    if (!id) {
+      alert("Please enter a valid task ID.");
+      return;
+    }
+    axios.post(`http://127.0.0.1:5000/api/tasks/${id}/execute`)
+      .then(response => {
+        this.fetchAllTasks();
+        this.taskMessage = response.data.message;
+        this.newlyCapturedImages = response.data.images.slice(-5);
+        this.taskImages = [];
+      })
+      .catch(error => {
+        if (error.response && error.response.status === 404) {
+          alert("Task not found. Please enter a valid task ID.");
+        } else {
+          console.error(error);
+        }
+      });
+  },
     getTaskImages() {
       if (!this.taskIdForImages) {
         alert("Please enter a valid task ID.");
@@ -209,10 +244,11 @@ export default {
       }
       axios.get(`http://127.0.0.1:5000/api/tasks/${this.taskIdForImages}/images`)
         .then(response => {
-          this.taskImages = response.data; // Update task images
-          this.newlyCapturedImages = []; // Clear newly captured images
+          this.taskImages = response.data.images;
+          this.newlyCapturedImages = [];
         })
         .catch(err => {
+          alert("There is an error, make sure everything's correct!");
           console.error(err);
         });
     },
@@ -235,7 +271,8 @@ export default {
       })
       .then(() => {
         alert('Task successfully assigned to drone.');
-        this.fetchAllTasks(); // Refresh tasks after assignment
+        this.fetchAllTasks();
+        this.getDrones();
       })
       .catch(err => {
         console.error(err);
@@ -245,24 +282,38 @@ export default {
       const taskData = {
         name: this.newTask.name,
         description: this.newTask.description,
-        drone_id: this.newTask.assignedDrones[0] || null // Assuming you are assigning only one drone
+        drone_ids: this.newTask.assignedDrones
       };
 
-      axios.post('http://127.0.0.1:5000/api/tasks', taskData)
+    axios.post('http://127.0.0.1:5000/api/tasks', taskData)
         .then(response => {
+          this.fetchAllTasks();
           console.log('Task created successfully:', response.data);
           alert("Created successfully.");
           this.newTask = {
             name: '',
             description: '',
             assignedDrones: []
-          }; // Reset the form
+          };
+          this.showTaskForm = false;
         })
         .catch(error => {
           console.error('Error creating task:', error);
         });
     },
+    toggleTaskList() {
+      this.showTaskList = !this.showTaskList;
+    },
+    toggleTaskDetails(task) {
+       this.showTaskDetails = !!task;
+      this.selectedTask = task;
 
+      if (task && task.images) {
+        this.selectedTask.images = task.images;
+      } else {
+        this.selectedTask.images = [];
+  }
+    }
   },
   mounted() {
     this.fetchAllTasks();
@@ -270,3 +321,14 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.task-list-frame, .task-details-frame {
+  border: 1px solid #ccc;
+  padding: 16px;
+  margin-top: 16px;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #f9f9f9;
+}
+</style>

@@ -4,7 +4,17 @@
 
 This project is a web-based UAV monitoring and task execution platform designed to manage drone tasks and retrieve images captured during task execution. The platform includes functionalities for creating tasks, assigning tasks to drones, executing tasks, and retrieving associated images.
 
+
 ## Setup Instructions
+
+### Environment Configuration
+
+Before running the application, make sure to set up your environment variables:
+
+**Create a `.env` file:**
+- Copy the contents of the `.env.example` file (in the backend directory) to a new file named `.env`.
+- Replace the placeholder values with your actual configuration details.
+
 
 ### Prerequisites
 - [Python 3.8+](https://www.python.org/downloads/)

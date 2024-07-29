@@ -6,7 +6,7 @@ app = create_app()
 
 @app.route('/')
 def index():
-    return jsonify({"message": "Welcome to the UAV Monitoring API"})
+    return jsonify({"message": "Great! Flask works, run frontend."})
 
 if __name__ == "__main__":
     app.run(debug=True)

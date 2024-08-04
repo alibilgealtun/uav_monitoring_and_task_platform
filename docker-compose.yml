@@ -1,0 +1,46 @@
+version: '3'
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "5000:5000"
+    environment:
+      FLASK_APP: run.py
+      FLASK_ENV: development
+      MINIO_ACCESS_KEY: miniouser123
+      MINIO_SECRET_KEY: miniokey123
+    volumes:
+      - ./backend:/app
+    networks:
+      - minio-network
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+    networks:
+      - minio-network
+
+  minio:
+    image: minio/minio
+    container_name: minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: miniouser123
+      MINIO_ROOT_PASSWORD: miniokey123
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio-data:/data
+    networks:
+      - minio-network
+
+volumes:
+  minio-data:
+
+networks:
+  minio-network:
+    driver: bridge

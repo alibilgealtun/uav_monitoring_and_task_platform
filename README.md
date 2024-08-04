@@ -1,62 +1,37 @@
-# Web-based UAV Monitoring and Task Execution Platform
+# UAV Monitoring and Task Platform
 
-## Overview
+This project is a web-based UAV monitoring and task execution platform built with a Flask backend and a Vue.js frontend. The platform allows users to create and assign tasks to drones, execute tasks, and view the results.
 
-This project is a web-based UAV monitoring and task execution platform designed to manage drone tasks and retrieve images captured during task execution. The platform includes functionalities for creating tasks, assigning tasks to drones, executing tasks, and retrieving associated images.
+## Features
 
+- Create, assign, and manage tasks for drones
+- Execute tasks and view the associated images
+- Paginated list of drones and their tasks
 
-## Setup Instructions
+## Prerequisites
 
-### Environment Configuration
+- Docker and Docker Compose installed
 
-Before running the application, make sure to set up your environment variables:
+## Getting Started
 
-**Create a `.env` file:**
-- Copy the contents of the `.env.example` file (in the backend directory) to a new file named `.env`.
-- Replace the placeholder values with your actual configuration details.
+Follow these instructions to get a copy of the project up and running on your local machine for development and testing purposes.
 
-
-### Prerequisites
-- [Python 3.8+](https://www.python.org/downloads/)
-- [Node.js 14+](https://nodejs.org/en/download/)
-- [MinIO](https://min.io/)
-
-### Backend Setup
-1. **Navigate to the backend directory**:
+### Clone the Repository
    ```bash
-   cd backend
-2. **Install dependencies**:
+   git clone https://github.com/alibilgealtun/uav_monitoring_and_task_platform.git
+   cd uav_monitoring_and_task_platform
+   ```
+### Build and Run the Application
    ```bash
-   pip install -r requirements.txt
-3. **Run flask**:
-   ```bash
-   python run.py
+   docker-compose up --build
+   ```
 
+### Access the frontend and backend applications in your browser:
+- Frontend UI: http://localhost:8080
+- Backend API: http://localhost:5000
+- Minio UI: http://localhost:9001/login
+- Minio Username: miniouser123
+- Minio Password: miniokey123
 
-### Frontend Setup
-1. **Navigate to the frontend directory**:
-   ```bash
-   cd frontend
-2. **Install dependencies**:
-   ```bash
-   npm install
-3. **Run the frontend application**:
-   ```bash
-   npm run serve
-4. **The frontend server will start, and you can access it via the URL provided by the terminal (typically http://localhost:8080).**
-
-### Minio Setup 
-1. **Download MinIO from the official website.**
-2. **Run Minio**
-   ```bash
-   .\minio.exe server C:\minio --console-address :9001
-3. **MinIO will start, and the console can be accessed at http://localhost:9001.**
-
-
-### Usage
-**Create Drones: Use the frontend to add drones.**
-**Create Tasks: Define tasks and assign drones via the frontend.**
-**Execute Tasks: Trigger task execution, which captures images.**
-**View Task Details: Retrieve and view images captured during task execution.**
 
 

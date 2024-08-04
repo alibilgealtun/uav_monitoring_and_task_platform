@@ -29,10 +29,9 @@ def create_app(config_class=Config):
     # Register error handlers
     from .utils.error_handlers import register_error_handlers
     register_error_handlers(app)
-
     # Create database tables and initialize MinIO client
     with app.app_context():
         db.create_all()
-        app.minio_client = create_minio_client(app)
+        # app.minio_client = create_minio_client(app)
 
     return app

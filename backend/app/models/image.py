@@ -4,7 +4,7 @@ class Image(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'), nullable=False)
     image_url = db.Column(db.String, nullable=False)
-
+    task = db.relationship('Task', backref=db.backref('images', lazy=True))
     def __repr__(self):
         return '<Image %r>' % self.id
 

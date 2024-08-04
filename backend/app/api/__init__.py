@@ -2,5 +2,5 @@ from flask import Blueprint
 
 bp = Blueprint('api', __name__)
 
-from . import tasks, images, drones
+from . import tasks, drones
 

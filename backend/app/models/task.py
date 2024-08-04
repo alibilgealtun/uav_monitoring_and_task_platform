@@ -1,15 +1,16 @@
 from ..extensions import db
+from .association import task_drones
 
 class Task(db.Model):
     """
-        Database task model representing a task assigned to a drone. 
-        # TODO: Ask if it needs multiple drones. DB Schema documentation says one-to-many..
+        Database task model representing a task assigned to a drone.
     """
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text, nullable=True)
-    drone_id = db.Column(db.Integer, db.ForeignKey('drone.id'), nullable=False)
-    images = db.relationship('Image', backref='task', lazy=True)
+    drones = db.relationship('Drone', secondary=task_drones, backref=db.backref('tasks', lazy=True), lazy='subquery')
+    # images = db.relationship('Image', backref='task', lazy=True)
 
     def __repr__(self):
         return '<Task %r>' % self.id
@@ -22,5 +23,5 @@ class Task(db.Model):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'drone_id': self.drone_id
+            'drones': [drone.id for drone in self.drones]
         }

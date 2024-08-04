@@ -1,7 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
-from minio import Minio
+from .utils.minio_utils import MinioUtils
 
 db = SQLAlchemy()
+
 
 def create_minio_client(app):
     """
@@ -11,7 +12,7 @@ def create_minio_client(app):
         app (Flask): The Flask application instance.
 
     Returns:
-        Minio: The configured Minio client instance.
+        MinioUtils: The configured MinioUtil.
     """
     endpoint = app.config.get('MINIO_ENDPOINT')
     access_key = app.config.get('MINIO_ACCESS_KEY')
@@ -20,9 +21,4 @@ def create_minio_client(app):
     if not endpoint or not access_key:
         raise ValueError("MinIO configuration is missing required parameters.")
 
-    return Minio(
-        endpoint,
-        access_key=access_key,
-        secret_key=secret_key,
-        secure=False
-    )
+    return MinioUtils(endpoint, access_key, secret_key)
